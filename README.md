@@ -1,4 +1,4 @@
-must set an environment variable for your faceit api key
+Must set an environment variable for your faceit api key
 
 `export #FACEIT_API_KEY="YOUR_KEY_HERE"`
 if calling from a script, must be like:
