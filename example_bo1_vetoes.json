@@ -1,0 +1,130 @@
+{
+    "payload": {
+        "match_id": "1-c6d34ede-c0ae-4e6a-bf74-aa6e72a00faf",
+        "tickets": [
+            {
+                "entities": [
+                    {
+                        "guid": "ESEA-Denver",
+                        "status": "drop",
+                        "random": false,
+                        "round": 1,
+                        "selected_by": "faction1"
+                    },
+                    {
+                        "guid": "Dallas",
+                        "status": "drop",
+                        "random": false,
+                        "round": 2,
+                        "selected_by": "faction2"
+                    },
+                    {
+                        "guid": "Denver",
+                        "status": "drop",
+                        "random": false,
+                        "round": 3,
+                        "selected_by": "faction1"
+                    },
+                    {
+                        "guid": "ESEA-Dallas",
+                        "status": "drop",
+                        "random": false,
+                        "round": 4,
+                        "selected_by": "faction2"
+                    },
+                    {
+                        "guid": "ESEA-Chicago",
+                        "status": "drop",
+                        "random": false,
+                        "round": 5,
+                        "selected_by": "faction1"
+                    },
+                    {
+                        "guid": "Chicago",
+                        "status": "pick",
+                        "random": false,
+                        "round": 6,
+                        "selected_by": "faction1"
+                    }
+                ],
+                "entity_type": "location",
+                "vote_type": "drop_pick"
+            },
+            {
+                "entities": [
+                    {
+                        "guid": "team_a",
+                        "status": "drop",
+                        "random": false,
+                        "round": 0,
+                        "selected_by": ""
+                    },
+                    {
+                        "guid": "team_b",
+                        "status": "pick",
+                        "random": false,
+                        "round": 1,
+                        "selected_by": "faction1"
+                    }
+                ],
+                "entity_type": "first_voter",
+                "vote_type": "drop_pick"
+            },
+            {
+                "entities": [
+                    {
+                        "guid": "de_dust2",
+                        "status": "drop",
+                        "random": false,
+                        "round": 1,
+                        "selected_by": "faction2"
+                    },
+                    {
+                        "guid": "de_anubis",
+                        "status": "drop",
+                        "random": false,
+                        "round": 2,
+                        "selected_by": "faction1"
+                    },
+                    {
+                        "guid": "de_vertigo",
+                        "status": "drop",
+                        "random": false,
+                        "round": 3,
+                        "selected_by": "faction1"
+                    },
+                    {
+                        "guid": "de_nuke",
+                        "status": "drop",
+                        "random": false,
+                        "round": 4,
+                        "selected_by": "faction2"
+                    },
+                    {
+                        "guid": "de_mirage",
+                        "status": "drop",
+                        "random": false,
+                        "round": 5,
+                        "selected_by": "faction2"
+                    },
+                    {
+                        "guid": "de_inferno",
+                        "status": "drop",
+                        "random": false,
+                        "round": 6,
+                        "selected_by": "faction1"
+                    },
+                    {
+                        "guid": "de_ancient",
+                        "status": "pick",
+                        "random": false,
+                        "round": 7,
+                        "selected_by": "faction2"
+                    }
+                ],
+                "entity_type": "map",
+                "vote_type": "drop_pick"
+            }
+        ]
+    }
+}
