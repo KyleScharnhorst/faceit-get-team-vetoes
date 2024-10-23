@@ -9,3 +9,7 @@ Or clobber the line of code getting environment variable and just replace it wit
 Get your set of match IDs and the team's ID and update `get_vetoes.py` update section.
 
 Can acquire your set of match ID's by using this tool: https://github.com/KyleScharnhorst/firefox-ext-faceit-team-match-copier
+
+Team ID can be found in the URL when viewing their team page on faceit. Given: https://www.faceit.com/en/teams/73d28e6f-13a5-4d16-afef-4ba6572d5849/leagues
+
+Their team ID is: 73d28e6f-13a5-4d16-afef-4ba6572d5849
