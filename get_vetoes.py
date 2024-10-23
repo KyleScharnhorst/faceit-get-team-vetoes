@@ -1,21 +1,23 @@
 import os
 import time
 import json
+import requests
 
 ############## UPDATE THESE ##############
 faceit_api_key = os.environ['FACEIT_API_KEY']
 
 # can get this from the url when looking at a team's league season matches
-faceit_team_id = "30dd56ee-d645-4cd7-a7ca-e2ce5b7eddd8"
+faceit_team_id = "73d28e6f-13a5-4d16-afef-4ba6572d5849"
 
-season_0 = ['foo']
-seasons =[season_0]
-# season_0 = ["1-36319026-c496-40ac-bc25-b5aa10b16467","1-303bcfc7-ff80-4028-bf06-69f1adebd748","1-72f723b8-93c1-429a-95b5-7d365b4dcb2e","1-cb00a42b-a8d9-4e95-b8bc-c653a4353a38","1-c6d34ede-c0ae-4e6a-bf74-aa6e72a00faf","1-b283347f-f4fb-4065-bd1c-b439721b152c","1-d72d75ea-3bad-41ff-a8cf-03ed34844ea0","1-00ac9367-3d17-4c67-a049-e8ad46e779d7"]
-# season_1 = ["1-2478503e-5930-437b-bbcf-be8ecf94b8a5","1-f9e980d0-58ce-4818-b239-6137c774a7d9","1-9f687800-8019-4820-ab73-ea0a8b72983d","1-3e6f2355-ed02-43f5-8a48-609bb2a33485","1-3f842f5e-df10-4b3d-9c5e-c37dbd6bd99b","1-4edcbfa1-1d94-431c-8a22-5a8878ac6874","1-833254c1-5471-4f17-a0b4-37f014bd74e9","1-05447b17-1686-4b1e-a968-461cbb91437d","1-f636a7d0-ebf7-45ed-b018-1bf8bf3d5ce3","1-942f1d12-2f0f-478b-95bf-14eada868ff3","1-42408bde-2429-4520-845d-208360dce93d","1-c11048c7-19fd-40ad-87cf-151a464a0ecc","1-77c08a28-da17-4a24-a0ca-396df72aa4af","1-6fbb2ce1-a3a1-4101-97cd-aa695fa6d085"]
+# season_0 = ["1-490e80f8-6d23-4014-80f9-b2e5280dabef"]
+# seasons =[season_0]
+season_0 = ["1-490e80f8-6d23-4014-80f9-b2e5280dabef","1-c49d7259-955d-4f8a-957d-794689d9bb99","1-e64f9ed4-c0a0-4a79-8636-5b8ec75533a6","1-340ca388-a930-4cbb-8f3a-33d5b69fa061","1-139a5e5a-715e-4c08-90ad-7dfd4cd797cd","1-e7c473fa-31df-464f-a25d-849cecfc7b63","1-dab4f737-ceb5-4b39-9b63-453120464e6e","1-def7ad65-4e13-40c3-a778-edde7b204306"]
+season_1 = ["1-8d123f61-e982-4892-9bba-1164ccab6fe7","1-191be23e-4311-4dcc-83b1-483a744d1bd5","1-ce72d11b-d42c-4f59-b9a9-efd2edfdfcce","1-130b4c6e-8dc8-46a2-bcca-37089bf629ca","1-81513758-e2be-453d-9444-60e782d8c99f","1-cf4be1b3-beaf-404c-8733-7ad150e33e8b","1-65f5ed91-e0dc-4cda-ab71-4436e6625fb1","1-ef01719c-c0a5-4538-bf7f-cc302a0cbe94","1-dbe3522b-76d5-4803-a3fd-d3748400ebf2","1-8ab84471-9642-4fc4-92d6-37e0b10142c6","1-0b22c9df-b1ad-41c0-98a6-f469e3b50fbd","1-cb76a977-46c7-46ba-93cf-e98ef950d520","1-5137caf6-7bdb-469c-8304-1e5e69047903","1-f5d39d89-5576-4dbe-ad53-e34fb9c65aef"]
 
-# seasons = [season_0, season_1]
+seasons = [season_0, season_1]
 
 # update if faceit cuts you off for too many requests.
+# 1 is too low? 5 too low?
 TIME_BETWEEN_REQUESTS = 1
 ##########################################
 
@@ -31,6 +33,14 @@ team_data = {
     'team_id': faceit_team_id,
     'maps':{}
 }
+
+def retrieve_faceit_api_get_match_url(match_id):
+    # https://open.faceit.com/data/v4/matches/{{match_id}}
+    return 'https://open.faceit.com/data/v4/matches/' + match_id
+
+def retrieve_faceit_api_veto_url(match_id):
+    # https://api.faceit.com/democracy/v1/match/{{match_id}}/history
+    return 'https://api.faceit.com/democracy/v1/match/' + match_id + '/history'
 
 def get_map_object():
     return {
@@ -61,22 +71,32 @@ def update_map_play_data(map, picked=0, banned=0, random_ban=0, wins=0, unfinish
     map_object['played'] += played
 
 def get_match_vetoes(match_id):
-    # Open and read the JSON file
-    with open('example_bo3_vetoes.json', 'r') as file:
-        data = json.load(file)
+    url = retrieve_faceit_api_veto_url(match_id)
+    # print('url: ' + url)
+    response = requests.get(url)
 
-    # Print the data
-    # print(data)
-    return data
+    if response.status_code == 200:
+        # print(response.text)
+        return response.json()
+    else:
+        print(f"Get match vetoes request failed with status code {response.status_code}")
 
 def get_match(match_id):
-    # Open and read the JSON file
-    with open('example_bo3_match.json', 'r') as file:
-        data = json.load(file)
+    
+    url = retrieve_faceit_api_get_match_url(match_id)
+    # print('url: ' + url)
 
-    # Print the data
-    # print(data)
-    return data
+    headers = {
+        'Authorization': 'Bearer ' + faceit_api_key
+    }
+    
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        # print(response.text)
+        return response.json()
+    else:
+        print(f"Get match request failed with status code {response.status_code}")
 
 def is_map_won(match, faction, map):
     # the pick list and detailed_results list are parallel lists.
@@ -97,13 +117,24 @@ def determine_faction(match):
         team_data['team'] = match['teams']['faction2']['name']
         return FACTION_2_NAME
     else:
-        raise Exception("Team does not match either faction, this should never happen.") 
+        raise Exception("Team does not match either faction, this should never happen. Remember to update the faceit team id in the update section.") 
 
 def run():
     for season in seasons:
+        print('season match ids: ' + json.dumps(season))
         for match_id in season:
+            print('match_id: ' + match_id)
+            
             match = get_match(match_id)
+            if match is None:
+                print('Match was not provided, skipping')
+                continue
+
             match_vetoes = get_match_vetoes(match_id)
+            if match_vetoes is None:
+                print('Match vetoes not provided, match may not have been played yet. Skipping.')
+                continue
+
 
             faction = determine_faction(match)
             print('faction: ' + faction)
@@ -148,3 +179,7 @@ run()
 json_string = json.dumps(team_data, indent=4)
 
 print(json_string)
+print ('writing to results dir')
+filename=team_data['team'] + '.json'
+with open('results/' + filename, 'w', encoding='utf-8') as f:
+    json.dump(team_data, f, ensure_ascii=False, indent=4)
