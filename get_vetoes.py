@@ -19,6 +19,9 @@ seasons = [season_0, season_1]
 
 # update if faceit cuts you off for too many requests.
 TIME_BETWEEN_REQUESTS = 0.1
+
+# language, used for generating faceit url links.
+DEFAULT_LANGUAGE = 'en'
 ##########################################
 
 FACTION_1_NAME = 'faction1'
@@ -119,9 +122,22 @@ def determine_faction(match):
     else:
         raise Exception("Team does not match either faction, this should never happen. Remember to update the faceit team id in the update section.") 
 
+def get_faceit_url(match):
+    result = None
+
+    if match:
+        faceit_url = match.get('faceit_url')
+        if faceit_url:
+            faceit_url = faceit_url.replace('{lang}', DEFAULT_LANGUAGE)
+            result = faceit_url
+
+    return result
 
 def update_match_play_data(match, faction, map_name=None):
 
+    if not match.get('voting'):
+        print('missing voting entry for: ' + get_faceit_url(match))
+        return
     maps = match['voting']['map']['pick']
 
     if map_name:
