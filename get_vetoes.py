@@ -58,10 +58,13 @@ def get_map_object():
             # number of wins this team has on the map
             'wins':0,
             # shows that there is a match still in progress.
-            'unfinished':0
+            'unfinished':0,
+            # shows if the map was chosen from either side, but didn't play it due to
+            # something like bo3 going 2-0
+            'not_played':0
         }
 
-def update_map_play_data(map, picked=0, banned=0, random_ban=0, wins=0, unfinished=0, played=0):
+def update_map_play_data(map, picked=0, banned=0, random_ban=0, wins=0, unfinished=0, played=0, not_played=0):
     if map not in team_data['maps']:
         team_data['maps'][map] = get_map_object()
     
@@ -72,6 +75,7 @@ def update_map_play_data(map, picked=0, banned=0, random_ban=0, wins=0, unfinish
     map_object['wins'] += wins
     map_object['unfinished'] += unfinished
     map_object['played'] += played
+    map_object['not_played'] += not_played
 
 def get_match_vetoes(match_id):
     url = retrieve_faceit_api_veto_url(match_id)
@@ -101,12 +105,24 @@ def get_match(match_id):
     else:
         print(f"Get match request failed with status code {response.status_code}")
 
+def was_map_played(match, map):  
+    map_pick_index = match['voting']['map']['pick'].index(map)
+
+    try:
+        detailed_result = match['detailed_results'][map_pick_index]
+        return True
+    except:
+        return False
+
+
 def is_map_won(match, faction, map):
     # the pick list and detailed_results list are parallel lists.
     # given the index of the map in pick we can discern the detailed result.
     # allows handling bo1s and boXs.
+   
     map_pick_index = match['voting']['map']['pick'].index(map)
     detailed_result = match['detailed_results'][map_pick_index]
+
     return detailed_result['winner'] == faction
 
 def is_match_finished(match):
@@ -145,15 +161,21 @@ def update_match_play_data(match, faction, map_name=None):
 
     for map in maps:
         if is_match_finished(match):
-            if is_map_won(match, faction, map_name):
-                update_map_play_data(map_name, played=1, wins=1)
+            if was_map_played(match, map_name):
+                if is_map_won(match, faction, map_name):
+                    update_map_play_data(map_name, played=1, wins=1)
+                else:
+                    update_map_play_data(map_name, played=1)
             else:
-                update_map_play_data(map_name, played=1)
+                update_map_play_data(map_name, not_played=1)
         else:
             update_map_play_data(map_name, unfinished=1)
 
 def update_match_play_data_for_team_pick(match, faction, map_name=None):
 
+    if not match.get('voting'):
+        print('missing voting entry for: ' + get_faceit_url(match))
+        return
     maps = match['voting']['map']['pick']
 
     if map_name:
@@ -162,10 +184,13 @@ def update_match_play_data_for_team_pick(match, faction, map_name=None):
     for map in maps:
 
         if is_match_finished(match):
-            if is_map_won(match, faction, map):
-                update_map_play_data(map, picked=1, played=1, wins=1) 
+            if was_map_played(match, map_name):
+                if is_map_won(match, faction, map):
+                    update_map_play_data(map, picked=1, played=1, wins=1) 
+                else:
+                    update_map_play_data(map, picked=1, played=1)
             else:
-                update_map_play_data(map, picked=1, played=1)
+                update_map_play_data(map_name, picked=1, not_played=1)
         else:
             update_map_play_data(map, picked=1, unfinished=1)
     
