@@ -7,21 +7,8 @@ import requests
 ############## UPDATE THESE ##############
 faceit_api_key = os.environ['FACEIT_API_KEY']
 
-# can get this from the url when looking at a team's league season matches
-faceit_team_id = "73d28e6f-13a5-4d16-afef-4ba6572d5849"
-
-# season_0 = ["1-81513758-e2be-453d-9444-60e782d8c99f"]
-# seasons =[season_0]
-season_0 = ["1-490e80f8-6d23-4014-80f9-b2e5280dabef","1-c49d7259-955d-4f8a-957d-794689d9bb99","1-e64f9ed4-c0a0-4a79-8636-5b8ec75533a6","1-340ca388-a930-4cbb-8f3a-33d5b69fa061","1-139a5e5a-715e-4c08-90ad-7dfd4cd797cd","1-e7c473fa-31df-464f-a25d-849cecfc7b63","1-dab4f737-ceb5-4b39-9b63-453120464e6e","1-def7ad65-4e13-40c3-a778-edde7b204306"]
-season_1 = ["1-8d123f61-e982-4892-9bba-1164ccab6fe7","1-191be23e-4311-4dcc-83b1-483a744d1bd5","1-ce72d11b-d42c-4f59-b9a9-efd2edfdfcce","1-130b4c6e-8dc8-46a2-bcca-37089bf629ca","1-81513758-e2be-453d-9444-60e782d8c99f","1-cf4be1b3-beaf-404c-8733-7ad150e33e8b","1-65f5ed91-e0dc-4cda-ab71-4436e6625fb1","1-ef01719c-c0a5-4538-bf7f-cc302a0cbe94","1-dbe3522b-76d5-4803-a3fd-d3748400ebf2","1-8ab84471-9642-4fc4-92d6-37e0b10142c6","1-0b22c9df-b1ad-41c0-98a6-f469e3b50fbd","1-cb76a977-46c7-46ba-93cf-e98ef950d520","1-5137caf6-7bdb-469c-8304-1e5e69047903","1-f5d39d89-5576-4dbe-ad53-e34fb9c65aef"]
-
-seasons = [season_0, season_1]
-
-# update if faceit cuts you off for too many requests.
-TIME_BETWEEN_REQUESTS = 0.1
-
-# language, used for generating faceit url links.
-DEFAULT_LANGUAGE = 'en'
+# if using a different file besides the default, change.
+config_file = 'config.json'
 ##########################################
 
 FACTION_1_NAME = 'faction1'
@@ -33,9 +20,14 @@ FINISHED_STATUS = 'FINISHED'
 
 team_data = {
     'team': '',
-    'team_id': faceit_team_id,
+    'team_id': '',
     'maps':{}
 }
+
+def get_config_data_from_file(file_name):
+    with open(file_name, 'r') as file:
+        data = json.load(file)
+        return data
 
 def retrieve_faceit_api_get_match_url(match_id):
     # https://open.faceit.com/data/v4/matches/{{match_id}}
@@ -194,7 +186,7 @@ def update_match_play_data_for_team_pick(match, faction, map_name=None):
         else:
             update_map_play_data(map, picked=1, unfinished=1)
     
-def run():
+def run(seasons):
     for season in seasons:
         # print('season match ids: ' + json.dumps(season))
         for match_id in season:
@@ -261,7 +253,24 @@ def run():
               
             time.sleep(TIME_BETWEEN_REQUESTS)
 
-run()
+#############
+### START ###
+#############
+config_data = get_config_data_from_file(config_file)
+
+# can get this from the url when looking at a team's league season matches
+faceit_team_id = config_data['team_id']
+
+# update if faceit cuts you off for too many requests.
+TIME_BETWEEN_REQUESTS = config_data['time_between_requests']
+
+# language, used for generating faceit url links.
+DEFAULT_LANGUAGE = config_data['default_language']
+
+# all match data, data should be grabbed using firefox ext.
+seasons = config_data["seasons"]
+
+run(seasons)
 
 # Pretty print JSON with indentation
 json_string = json.dumps(team_data, indent=4)
