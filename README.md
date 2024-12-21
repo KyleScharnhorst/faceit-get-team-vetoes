@@ -20,7 +20,7 @@ Can be acquired from the URL of their team's page.
 
 Given: https://www.faceit.com/en/teams/73d28e6f-13a5-4d16-afef-4ba6572d5849/leagues
 
-Their team ID is: 73d28e6f-13a5-4d16-afef-4ba6572d5849
+Their team ID is: `73d28e6f-13a5-4d16-afef-4ba6572d5849`
 
 `seasons`: Provide a list matches. Can provide many lists of matches.
 Each list of matches can be acquired using the Firefox extension:
@@ -36,4 +36,4 @@ default language back into the URL. You can see what your default language
 value is by viewing a faceit link. Given:
 https://www.faceit.com/en/teams/73d28e6f-13a5-4d16-afef-4ba6572d5849/leagues
 
-Your default langauge would be 'en'
+Your default langauge would be `en`
