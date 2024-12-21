@@ -260,6 +260,7 @@ config_data = get_config_data_from_file(config_file)
 
 # can get this from the url when looking at a team's league season matches
 faceit_team_id = config_data['team_id']
+team_data['team_id'] = faceit_team_id
 
 # update if faceit cuts you off for too many requests.
 TIME_BETWEEN_REQUESTS = config_data['time_between_requests']
