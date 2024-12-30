@@ -277,7 +277,7 @@ run(seasons)
 json_string = json.dumps(team_data, indent=4)
 
 print ('writing to results dir')
-print(json_string)
+# print(json_string)
 
 current_timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 filename=team_data['team'] + '_' + faceit_team_id + '_' + str(current_timestamp) + '.json'
