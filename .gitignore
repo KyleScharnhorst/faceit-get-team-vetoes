@@ -1,2 +1,3 @@
 set_env_vars.*
 results/*.json
+results/*/*.json
