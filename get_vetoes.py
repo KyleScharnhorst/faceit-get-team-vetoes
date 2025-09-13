@@ -98,9 +98,8 @@ def get_match(match_id):
         print(f"Get match request failed with status code {response.status_code}")
 
 def was_map_played(match, map):  
-    map_pick_index = match['voting']['map']['pick'].index(map)
-
     try:
+        map_pick_index = match['voting']['map']['pick'].index(map)
         detailed_result = match['detailed_results'][map_pick_index]
         return True
     except:
@@ -256,30 +255,31 @@ def run(seasons):
 #############
 ### START ###
 #############
-config_data = get_config_data_from_file(config_file)
+if __name__ == '__main__':
+    config_data = get_config_data_from_file(config_file)
 
-# can get this from the url when looking at a team's league season matches
-faceit_team_id = config_data['team_id']
-team_data['team_id'] = faceit_team_id
+    # can get this from the url when looking at a team's league season matches
+    faceit_team_id = config_data['team_id']
+    team_data['team_id'] = faceit_team_id
 
-# update if faceit cuts you off for too many requests.
-TIME_BETWEEN_REQUESTS = config_data['time_between_requests']
+    # update if faceit cuts you off for too many requests.
+    TIME_BETWEEN_REQUESTS = config_data['time_between_requests']
 
-# language, used for generating faceit url links.
-DEFAULT_LANGUAGE = config_data['default_language']
+    # language, used for generating faceit url links.
+    DEFAULT_LANGUAGE = config_data['default_language']
 
-# all match data, data should be grabbed using firefox ext.
-seasons = config_data["seasons"]
+    # all match data, data should be grabbed using firefox ext.
+    seasons = config_data["seasons"]
 
-run(seasons)
+    run(seasons)
 
-# Pretty print JSON with indentation
-json_string = json.dumps(team_data, indent=4)
+    # Pretty print JSON with indentation
+    json_string = json.dumps(team_data, indent=4)
 
-print ('writing to results dir')
-# print(json_string)
+    print ('writing to results dir')
+    # print(json_string)
 
-current_timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-filename=team_data['team'] + '_' + faceit_team_id + '_' + str(current_timestamp) + '.json'
-with open('results/' + filename, 'w', encoding='utf-8') as f:
-    json.dump(team_data, f, ensure_ascii=False, indent=4)
+    current_timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename=team_data['team'] + '_' + faceit_team_id + '_' + str(current_timestamp) + '.json'
+    with open('results/' + filename, 'w', encoding='utf-8') as f:
+        json.dump(team_data, f, ensure_ascii=False, indent=4)
