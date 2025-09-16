@@ -17,6 +17,7 @@ MAP_ENTITY_TYPE = 'map'
 BAN_STATUS = 'drop'
 PICK_STATUS = 'pick'
 FINISHED_STATUS = 'FINISHED'
+TEAM_MISMATCH_ERROR = "Team does not match either faction, this should never happen. Remember to update the faceit team id in the update section."
 
 team_data = {
     'team': '',
@@ -127,7 +128,7 @@ def determine_faction(match):
         team_data['team'] = match['teams']['faction2']['name']
         return FACTION_2_NAME
     else:
-        raise Exception("Team does not match either faction, this should never happen. Remember to update the faceit team id in the update section.") 
+        raise Exception(TEAM_MISMATCH_ERROR) 
 
 def get_faceit_url(match):
     result = None

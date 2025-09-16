@@ -94,55 +94,57 @@ class TestGetVetoes(unittest.TestCase):
         result = get_vetoes.get_map_object()
         self.assertEqual(result, expected_map_object)
 
-    # @patch('get_vetoes.requests.get')
-    # def test_get_match_vetoes_success(self, mock_get):
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 200
-    #     mock_response.json.return_value = {"key": "value"}
-    #     mock_get.return_value = mock_response
+    @patch('get_vetoes.requests.get')
+    def test_get_match_vetoes_success(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"key": "value"}
+        mock_get.return_value = mock_response
 
-    #     result = get_vetoes.get_match_vetoes("12345")
-    #     self.assertEqual(result, {"key": "value"})
-    #     mock_get.assert_called_once_with("https://api.faceit.com/democracy/v1/match/12345/history")
+        result = get_vetoes.get_match_vetoes("12345")
+        self.assertEqual(result, {"key": "value"})
+        mock_get.assert_called_once_with("https://api.faceit.com/democracy/v1/match/12345/history")
 
-    # @patch('get_vetoes.requests.get')
-    # def test_get_match_vetoes_failure(self, mock_get):
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 404
-    #     mock_get.return_value = mock_response
+    @patch('get_vetoes.requests.get')
+    def test_get_match_vetoes_failure(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_get.return_value = mock_response
 
-    #     result = get_vetoes.get_match_vetoes("12345")
-    #     self.assertIsNone(result)
-    #     mock_get.assert_called_once_with("https://api.faceit.com/democracy/v1/match/12345/history")
+        result = get_vetoes.get_match_vetoes("12345")
+        self.assertIsNone(result)
+        mock_get.assert_called_once_with("https://api.faceit.com/democracy/v1/match/12345/history")
 
-    # @patch('get_vetoes.requests.get')
-    # def test_get_match_success(self, mock_get):
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 200
-    #     mock_response.json.return_value = {"key": "value"}
-    #     mock_get.return_value = mock_response
+    @patch('get_vetoes.requests.get')
+    def test_get_match_success(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"key": "value"}
+        mock_get.return_value = mock_response
 
-    #     with patch.dict('os.environ', {'FACEIT_API_KEY': 'test_key'}):
-    #         result = get_vetoes.get_match("12345")
-    #         self.assertEqual(result, {"key": "value"})
-    #         mock_get.assert_called_once_with(
-    #             "https://open.faceit.com/data/v4/matches/12345",
-    #             headers={'Authorization': 'Bearer test_key'}
-    #         )
+        with patch.dict('os.environ', {'FACEIT_API_KEY': 'test_key'}):
+            result = get_vetoes.get_match("12345")
+            self.assertEqual(result, {"key": "value"})
+            mock_get.assert_called_once_with(
+                "https://open.faceit.com/data/v4/matches/12345",
+                headers={'Authorization': 'Bearer test_key'}
+            )
 
-    # @patch('get_vetoes.requests.get')
-    # def test_get_match_failure(self, mock_get):
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 404
-    #     mock_get.return_value = mock_response
+    @patch('get_vetoes.requests.get')
+    def test_get_match_failure(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_get.return_value = mock_response
 
-    #     with patch.dict('os.environ', {'FACEIT_API_KEY': 'test_key'}):
-    #         result = get_vetoes.get_match("12345")
-    #         self.assertIsNone(result)
-    #         mock_get.assert_called_once_with(
-    #             "https://open.faceit.com/data/v4/matches/12345",
-    #             headers={'Authorization': 'Bearer test_key'}
-    #         )
+        with patch.dict('os.environ', {'FACEIT_API_KEY': 'test_key'}):
+            result = get_vetoes.get_match("12345")
+            self.assertIsNone(result)
+            mock_get.assert_called_once_with(
+                "https://open.faceit.com/data/v4/matches/12345",
+                headers={'Authorization': 'Bearer test_key'}
+            )
+
+    
 
     def test_update_map_play_data_with_initial_values(self):
         get_vetoes.team_data = {'maps': {}}
@@ -295,33 +297,113 @@ class TestGetVetoes(unittest.TestCase):
         }
         self.assertFalse(get_vetoes.was_map_played(match_data_empty_results, 'de_dust2'))
 
-    # def test_is_match_finished(self):
-    #     match = {'status': 'FINISHED'}
-    #     self.assertTrue(get_vetoes.is_match_finished(match))
+    def test_is_match_finished(self):
+        match = {'status': 'FINISHED'}
+        self.assertTrue(get_vetoes.is_match_finished(match))
 
-    #     match = {'status': 'ONGOING'}
-    #     self.assertFalse(get_vetoes.is_match_finished(match))
+        match = {'status': 'ONGOING'}
+        self.assertFalse(get_vetoes.is_match_finished(match))
 
-    # def test_determine_faction(self):
-    #     get_vetoes.faceit_team_id = "team1"
-    #     match = {
-    #         'teams': {
-    #             'faction1': {'faction_id': 'team1', 'name': 'Team A'},
-    #             'faction2': {'faction_id': 'team2', 'name': 'Team B'}
-    #         }
-    #     }
-    #     result = get_vetoes.determine_faction(match)
-    #     self.assertEqual(result, get_vetoes.FACTION_1_NAME)
-    #     self.assertEqual(get_vetoes.team_data['team'], 'Team A')
+    def test_determine_faction1(self):
+        get_vetoes.faceit_team_id = "team1"
 
-    # def test_get_faceit_url(self):
-    #     match = {'faceit_url': 'https://www.faceit.com/{lang}/match'}
-    #     result = get_vetoes.get_faceit_url(match)
-    #     self.assertEqual(result, 'https://www.faceit.com/en/match')
+        match = {
+            'teams': {
+                'faction1': {'faction_id': 'team1', 'name': 'Team A'},
+                'faction2': {'faction_id': 'team2', 'name': 'Team B'}
+            }
+        }
+        
+        result = get_vetoes.determine_faction(match)
+        self.assertEqual(result, get_vetoes.FACTION_1_NAME)
+        self.assertEqual(get_vetoes.team_data['team'], 'Team A')
 
-    #     match = {}
-    #     result = get_vetoes.get_faceit_url(match)
-    #     self.assertIsNone(result)
+    def test_determine_faction2(self):
+        get_vetoes.faceit_team_id = 'team_id_2'
 
-if __name__ == '__main__':
-    unittest.main()
+        match = {
+            'teams': {
+                'faction1': {'faction_id': 'team_id_1', 'name': 'Team A'},
+                'faction2': {'faction_id': 'team_id_2', 'name': 'Team B'}
+            }
+        }
+        
+        result = get_vetoes.determine_faction(match)
+        self.assertEqual(result, 'faction2')
+        self.assertEqual(get_vetoes.team_data['team'], 'Team B')
+
+    def test_determine_faction_invalid_team(self):
+        match = {
+            'teams': {
+                'faction1': {'faction_id': 'team_id_1', 'name': 'Team A'},
+                'faction2': {'faction_id': 'team_id_3', 'name': 'Team C'}
+            }
+        }
+
+        get_vetoes.faceit_team_id = 'team_id_2'
+
+        with self.assertRaises(Exception) as context:
+            get_vetoes.determine_faction(match)
+        self.assertEqual(str(context.exception), get_vetoes.TEAM_MISMATCH_ERROR)
+
+    def test_is_map_won(self):
+        match = {
+            'voting': {
+                'map': {
+                    'pick': ['de_dust2', 'de_inferno']
+                }
+            },
+            'detailed_results': [
+                {
+                    'winner': 'faction1'
+                },
+                {
+                    'winner': 'faction2'
+                }
+            ],
+            'teams': {
+                'faction1': {'faction_id': '1'},
+                'faction2': {'faction_id': '2'}
+            }
+        }
+        self.assertTrue(get_vetoes.is_map_won(match, 'faction1', 'de_dust2'))
+        self.assertFalse(get_vetoes.is_map_won(match, 'faction1', 'de_inferno'))
+        self.assertTrue(get_vetoes.is_map_won(match, 'faction2', 'de_inferno'))
+        self.assertFalse(get_vetoes.is_map_won(match, 'faction2', 'de_dust2'))
+
+    def test_is_map_won_invalid_map(self):
+        match = {
+            'voting': {
+                'map': {
+                    'pick': ['de_dust2']
+                }
+            },
+            'detailed_results': [
+                {
+                    'winner': 'faction1'
+                }
+            ],
+            'teams': {
+                'faction1': {'faction_id': '1'},
+                'faction2': {'faction_id': '2'}
+            }
+        }
+        with self.assertRaises(ValueError):
+            get_vetoes.is_map_won(match, 'faction1', 'de_inferno')
+    
+    def test_get_faceit_url_with_valid_match(self):
+        get_vetoes.DEFAULT_LANGUAGE = 'en'
+        match = {'faceit_url': 'https://www.faceit.com/{lang}/cs2/room/1-c6d34ede-c0ae-4e6a-bf74-aa6e72a00faf'}
+        expected_url = 'https://www.faceit.com/' + get_vetoes.DEFAULT_LANGUAGE + '/cs2/room/1-c6d34ede-c0ae-4e6a-bf74-aa6e72a00faf'
+        result = get_vetoes.get_faceit_url(match)
+        self.assertEqual(result, expected_url)
+
+    def test_get_faceit_url_with_missing_url(self):
+        match = {}
+        result = get_vetoes.get_faceit_url(match)
+        self.assertIsNone(result)
+
+    def test_get_faceit_url_with_empty_url(self):
+        match = {'faceit_url': ''}
+        result = get_vetoes.get_faceit_url(match)
+        self.assertIsNone(result)
