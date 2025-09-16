@@ -1,4 +1,4 @@
-[![Tests](https://github.com/KyleScharnhorst/faceit-get-team-vetoes/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/KyleScharnhorst/faceit-get-team-vetoes/actions/workflows/test.yml)
+[![Python application](https://github.com/KyleScharnhorst/faceit-get-team-vetoes/actions/workflows/test.yml/badge.svg)](https://github.com/KyleScharnhorst/faceit-get-team-vetoes/actions/workflows/test.yml)
 
 # Summary
 
