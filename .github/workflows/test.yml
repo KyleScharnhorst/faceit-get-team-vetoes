@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 env:
-  FACEIT_API_KEY: "test"
+  FACEIT_API_KEY: "test_key"
 
 jobs:
   build:
