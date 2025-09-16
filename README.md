@@ -1,3 +1,5 @@
+![Tests](https://github.com/KyleScharnhorst/faceit-get-team-vetoes/actions/workflows/tests.yml/badge.svg)
+
 # Summary
 
 Must get an API key from faceit's developer site: https://docs.faceit.com/getting-started/intro/start-here
