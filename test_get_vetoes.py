@@ -407,3 +407,53 @@ class TestGetVetoes(unittest.TestCase):
         match = {'faceit_url': ''}
         result = get_vetoes.get_faceit_url(match)
         self.assertIsNone(result)
+
+    def test_add_grouped_stats(self):
+        # Initialize team_data with some map data
+        get_vetoes.team_data = {
+            'team': 'Team A',
+            'team_id': 'team_id_1',
+            'maps': {
+                'map1': {
+                    'played': 2,
+                    'picked': 1,
+                    'banned': 0,
+                    'random_ban': 0,
+                    'wins': 1,
+                    'unfinished': 0,
+                    'not_played': 0
+                },
+                'map2': {
+                    'played': 3,
+                    'picked': 2,
+                    'banned': 1,
+                    'random_ban': 0,
+                    'wins': 2,
+                    'unfinished': 1,
+                    'not_played': 0
+                },
+                'map3': {
+                    'played': 0,
+                    'picked': 0,
+                    'banned': 2,
+                    'random_ban': 1,
+                    'wins': 0,
+                    'unfinished': 0,
+                    'not_played': 0
+                }
+            }
+        }
+
+        # Call the function to add grouped stats
+        get_vetoes.add_grouped_stats(get_vetoes.team_data)
+
+        expected_played_stats = str([('map2', 3), ('map1', 2)])
+        expected_not_played_stats = str([('map3', 0)])
+        expected_banned_stats = str([('map3', 2), ('map2', 1), ('map1', 0)])
+        expected_win_stats = str([('map2', 2), ('map1', 1), ('map3', 0)])
+        
+        # Assert that the grouped stats were added correctly
+        self.assertEqual(str(get_vetoes.team_data['aa_played']), expected_played_stats)
+        self.assertEqual(str(get_vetoes.team_data['aa_not_played']), expected_not_played_stats)
+        self.assertEqual(str(get_vetoes.team_data['aa_banned']), expected_banned_stats)
+        self.assertEqual(str(get_vetoes.team_data['aa_wins']), expected_win_stats)
