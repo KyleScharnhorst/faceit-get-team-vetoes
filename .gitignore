@@ -10,3 +10,6 @@ results/*/*.json
 
 # Python cache files
 __pycache__/
+
+#vscode files
+.vscode/

@@ -253,6 +253,40 @@ def run(seasons):
               
             time.sleep(TIME_BETWEEN_REQUESTS)
 
+def add_grouped_stats(team_data):
+    played = []
+    not_played = []
+    banned = []
+    wins = []
+
+    for map in team_data['maps']:
+        map_object = team_data['maps'][map]
+
+        # handle wins
+        wins.append((map, map_object['wins']))
+
+        # handle banned
+        banned.append((map, map_object['banned']))
+
+        # handle played and not played
+        if map_object['played'] > 0:
+            played.append((map, map_object['played']))
+        else:
+            not_played.append((map, map_object['not_played']))
+    
+    # sort lists
+    played.sort(key=lambda x: x[1], reverse=True)
+    not_played.sort(key=lambda x: x[1], reverse=True)
+    banned.sort(key=lambda x: x[1], reverse=True)
+    wins.sort(key=lambda x: x[1], reverse=True)
+
+    # add stats to team data
+    team_data['aa_wins'] = str(wins)
+    team_data['aa_played'] = str(played)
+    team_data['aa_not_played'] = str(not_played)
+    team_data['aa_banned'] = str(banned)
+
+
 #############
 ### START ###
 #############
@@ -274,8 +308,10 @@ if __name__ == '__main__':
 
     run(seasons)
 
+    add_grouped_stats(team_data)
+
     # Pretty print JSON with indentation
-    json_string = json.dumps(team_data, indent=4)
+    # json_string = json.dumps(team_data, sort_keys=True, ensure_ascii=False, indent=4)
 
     print ('writing to results dir')
     # print(json_string)
@@ -283,4 +319,4 @@ if __name__ == '__main__':
     current_timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     filename=team_data['team'] + '_' + faceit_team_id + '_' + str(current_timestamp) + '.json'
     with open('results/' + filename, 'w', encoding='utf-8') as f:
-        json.dump(team_data, f, ensure_ascii=False, indent=4)
+        json.dump(team_data, f, sort_keys=True, ensure_ascii=False, indent=4)
